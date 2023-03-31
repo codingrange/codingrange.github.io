@@ -8,15 +8,14 @@
     color: white;
     position: relative;
     width: auto;
-    height: 75px;
-    position: relative;
-    top: -35px;
-    border-radius: 20px;
+    height: 5%;
+    top: -2pc;
+    border-radius: 1pc;
 }
 #heading{
-    font-size: 65px;
+    font-size: 350%;
     position: relative;
-    left: 30px;
+    left: 1%;
 }
 #list-item{
     color: white;
@@ -24,71 +23,73 @@
     text-align: center;
     display:block;
     float:left;
-    width:220px;
-    height:150px;
-    padding: 2px;
+    width: 50%;
+    height: 25%;
+    padding: 1.7%;
     position: relative;
-    top: -30px;
+    top: -35px;
 }
  #navigation{
-    padding-left: 550px;
+    text-align: left;
+    padding-left: 35%;
     position: relative;
-    top: -80px;
+    top: -5pc;
 }
  #zitat1{
     background-color: grey;
     color: white;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    border-radius: 20px;
+    border-radius: 1pc;
     text-align: left;
     position: relative;
-    top: -70px;
-    height: 270px;
-    width: auto;
+    top: -3.6pc;
+    height: 20pc;
+    width: 100%;
 }
 #z-framing1{
-    text-align: left;
+    text-align: right;
     position: relative;
-    left: -60%;
-    font-size: 75px;
+    left: -97%;
+    font-size: 4pc;
+    top: 3%;
 }
 #z-text1{
     text-align: left;
     position: relative;
-    left: -56%;
-    top: -130px;
-    font-size: 70px;
+    left: 4.5%;
+    top: -39%;
+    font-size: 6pc;
 }
 #z-text2{
     text-align: left;
     position: relative;
-    left: 8.5%;
-    top: -170px;
-    font-size: 70px;
+    left: 4.5%;
+    top: -63%;
+    font-size: 6pc;
 }
 #z-creator1{
     text-align: left;
-    font-size: 35px;
+    font-size: 2.5pc;
     position: relative;
-    top: -230px;
-    left: 20%;
+    top: -95%;
+    left: 28%;
 }
 #z-framing2{
     text-align: left;
     position: relative;
-    left: 42%;
-    font-size: 75px;
+    left: 51.5%;
+    font-size: 4pc;
     position: relative;
-    top: -320px;
+    top: -125%;
 }
 #z-picture1{
-    border-radius: 20px;
+    border-radius: 1pc;
     align-items: end;
     position: relative;
-    top: -673px;
-    width: 480px;
-    height: auto;
-    left: 62.5%;
+    top: -239%;
+    width: 35pc;
+    height: 20pc;
+    left: 56%;
 }
 #copyright{
     color: white;
@@ -96,5 +97,5 @@
     font-size: large;
     text-align: left;
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
 }
