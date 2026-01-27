@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>WG Kurswahl – Canvas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;background:#f4f6f8;font-family:system-ui}
+header{padding:14px;background:#111;color:#fff;text-align:center}
+canvas{display:block;margin:0 auto;background:#fff}
+</style>
+</head>
+<body>
+<header><strong>WG Kurswahl</strong> – Canvas</header>
+<canvas id="c" width="900" height="650"></canvas>
+<script>
+const RULES={min:10,max:14};
+const mandatory=["Deutsch","Mathematik","Englisch","Volks- & Betriebswirtschaft","Sport"];
+const electives=["Informatik","Physik","Chemie","Biologie","Geographie","Gemeinschaftskunde","Religion / Ethik","Musik","Kunst","Französisch","Italienisch"];
+const selected=new Set(mandatory);
+const c=document.getElementById("c"),x=c.getContext("2d");
+const W=280,H=42,G=10,tiles=[];
+function build(){let y=70;tiles.push({h:"Pflichtfächer",y});y+=30;
+mandatory.forEach((n,i)=>tiles.push({n,l:1,x:40,y:y+i*(H+G)}));
+y+=mandatory.length*(H+G)+40;tiles.push({h:"Wahlfächer",y});y+=30;
+electives.forEach((n,i)=>tiles.push({n,l:0,x:40,y:y+i*(H+G)}))}
+function draw(){
+x.clearRect(0,0,c.width,c.height);
+x.font="20px sans-serif";x.fillText("Kursübersicht",40,36);
+tiles.forEach(t=>{
+if(t.h){x.font="17px sans-serif";x.fillText(t.h,40,t.y);return;}
+const a=selected.has(t.n);
+x.fillStyle=t.l?"#cfe3ff":a?"#c9f7d4":"#eee";
+x.fillRect(t.x,t.y,W,H);x.strokeRect(t.x,t.y,W,H);
+x.fillStyle="#000";x.font="15px sans-serif";x.fillText(t.n,t.x+12,t.y+26)});
+const total=selected.size,ok=total>=RULES.min&&total<=RULES.max;
+x.fillStyle=ok?"#e8fff0":"#fff0f0";x.fillRect(360,120,480,130);x.strokeRect(360,120,480,130);
+x.font="18px sans-serif";x.fillStyle="#000";x.fillText("Status",380,150);
+x.font="15px sans-serif";x.fillText("Gewählte Kurse: "+total,380,180);
+x.fillText(ok?"✅ gültig":"⚠️ ungültig",380,210)}
+c.onclick=e=>{
+const r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+tiles.forEach(t=>{
+if(!t.n||t.l)return;
+if(mx>=t.x&&mx<=t.x+W&&my>=t.y&&my<=t.y+H)
+selected.has(t.n)?selected.delete(t.n):selected.add(t.n)});
+draw()}
+build();draw();
+</script>
+</body>
+</html>
