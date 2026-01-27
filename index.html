@@ -2,50 +2,127 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>WG Kurswahl – Canvas</title>
+<title>WG Kurswahl</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{margin:0;background:#f4f6f8;font-family:system-ui}
-header{padding:14px;background:#111;color:#fff;text-align:center}
-canvas{display:block;margin:0 auto;background:#fff}
+body{
+  margin:0;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background:#f4f6f8;
+}
+header{
+  background:#111;
+  color:#fff;
+  padding:14px;
+  text-align:center;
+  position:sticky;
+  top:0;
+}
+main{
+  max-width:900px;
+  margin:0 auto;
+  padding:20px;
+}
+.section{
+  background:#fff;
+  border-radius:10px;
+  padding:16px;
+  margin-bottom:20px;
+}
+h2{margin-top:0}
+label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 0;
+}
+input[type=checkbox]{
+  transform:scale(1.2);
+}
+.status{
+  padding:14px;
+  border-radius:10px;
+  font-weight:600;
+}
+.ok{background:#e8fff0}
+.bad{background:#fff0f0}
 </style>
 </head>
 <body>
-<header><strong>WG Kurswahl</strong> – Canvas</header>
-<canvas id="c" width="900" height="650"></canvas>
+
+<header>
+  <strong>WG Kurswahl</strong>
+</header>
+
+<main>
+  <div class="section">
+    <h2>Leistungsfächer (LK)</h2>
+    <p>Bitte genau <strong>2 LKs</strong> auswählen:</p>
+    <label><input type="checkbox" class="lk"> Deutsch (LK)</label>
+    <label><input type="checkbox" class="lk"> Mathematik (LK)</label>
+    <label><input type="checkbox" class="lk"> Englisch (LK)</label>
+    <label><input type="checkbox" class="lk"> Volks- & Betriebswirtschaft (LK)</label>
+  </div>
+
+  <div class="section">
+    <h2>Pflichtfächer</h2>
+    <label><input type="checkbox" checked disabled> Deutsch</label>
+    <label><input type="checkbox" checked disabled> Mathematik</label>
+    <label><input type="checkbox" checked disabled> Englisch</label>
+    <label><input type="checkbox" checked disabled> Volks- & Betriebswirtschaft</label>
+    <label><input type="checkbox" checked disabled> Sport</label>
+  </div>
+
+  <div class="section">
+    <h2>Wahlfächer</h2>
+    <label><input type="checkbox" class="elective"> Informatik</label>
+    <label><input type="checkbox" class="elective"> Physik</label>
+    <label><input type="checkbox" class="elective"> Chemie</label>
+    <label><input type="checkbox" class="elective"> Biologie</label>
+    <label><input type="checkbox" class="elective"> Geographie</label>
+    <label><input type="checkbox" class="elective"> Gemeinschaftskunde</label>
+    <label><input type="checkbox" class="elective"> Religion / Ethik</label>
+    <label><input type="checkbox" class="elective"> Musik</label>
+    <label><input type="checkbox" class="elective"> Kunst</label>
+    <label><input type="checkbox" class="elective"> Französisch</label>
+    <label><input type="checkbox" class="elective"> Italienisch</label>
+  </div>
+
+  <div id="status" class="status bad">Bitte Kurswahl treffen</div>
+</main>
+
 <script>
-const RULES={min:10,max:14};
-const mandatory=["Deutsch","Mathematik","Englisch","Volks- & Betriebswirtschaft","Sport"];
-const electives=["Informatik","Physik","Chemie","Biologie","Geographie","Gemeinschaftskunde","Religion / Ethik","Musik","Kunst","Französisch","Italienisch"];
-const selected=new Set(mandatory);
-const c=document.getElementById("c"),x=c.getContext("2d");
-const W=280,H=42,G=10,tiles=[];
-function build(){let y=70;tiles.push({h:"Pflichtfächer",y});y+=30;
-mandatory.forEach((n,i)=>tiles.push({n,l:1,x:40,y:y+i*(H+G)}));
-y+=mandatory.length*(H+G)+40;tiles.push({h:"Wahlfächer",y});y+=30;
-electives.forEach((n,i)=>tiles.push({n,l:0,x:40,y:y+i*(H+G)}))}
-function draw(){
-x.clearRect(0,0,c.width,c.height);
-x.font="20px sans-serif";x.fillText("Kursübersicht",40,36);
-tiles.forEach(t=>{
-if(t.h){x.font="17px sans-serif";x.fillText(t.h,40,t.y);return;}
-const a=selected.has(t.n);
-x.fillStyle=t.l?"#cfe3ff":a?"#c9f7d4":"#eee";
-x.fillRect(t.x,t.y,W,H);x.strokeRect(t.x,t.y,W,H);
-x.fillStyle="#000";x.font="15px sans-serif";x.fillText(t.n,t.x+12,t.y+26)});
-const total=selected.size,ok=total>=RULES.min&&total<=RULES.max;
-x.fillStyle=ok?"#e8fff0":"#fff0f0";x.fillRect(360,120,480,130);x.strokeRect(360,120,480,130);
-x.font="18px sans-serif";x.fillStyle="#000";x.fillText("Status",380,150);
-x.font="15px sans-serif";x.fillText("Gewählte Kurse: "+total,380,180);
-x.fillText(ok?"✅ gültig":"⚠️ ungültig",380,210)}
-c.onclick=e=>{
-const r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
-tiles.forEach(t=>{
-if(!t.n||t.l)return;
-if(mx>=t.x&&mx<=t.x+W&&my>=t.y&&my<=t.y+H)
-selected.has(t.n)?selected.delete(t.n):selected.add(t.n)});
-draw()}
-build();draw();
+const LK_REQUIRED = 2;
+const MIN = 10;
+const MAX = 14;
+
+function update(){
+  const lk = document.querySelectorAll('.lk:checked').length;
+  const electives = document.querySelectorAll('.elective:checked').length;
+  const mandatory = 5;
+  const total = mandatory + electives;
+
+  const status = document.getElementById('status');
+
+  if(lk !== LK_REQUIRED){
+    status.textContent = `⚠️ Bitte genau ${LK_REQUIRED} Leistungsfächer wählen (aktuell: ${lk})`;
+    status.className = "status bad";
+    return;
+  }
+
+  if(total < MIN || total > MAX){
+    status.textContent = `⚠️ Insgesamt ${MIN}–${MAX} Kurse nötig (aktuell: ${total})`;
+    status.className = "status bad";
+    return;
+  }
+
+  status.textContent = `✅ Kurswahl gültig – ${total} Kurse, ${lk} LKs`;
+  status.className = "status ok";
+}
+
+document.querySelectorAll('input').forEach(i=>i.addEventListener('change',update));
+update();
 </script>
+
 </body>
 </html>
